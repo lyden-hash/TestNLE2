@@ -1,0 +1,7 @@
+{
+  "name": "ConstructAI Pro",
+  "description": "A high-performance construction estimation and bid management platform with AI-powered risk auditing, pipeline tracking, and real-time dashboarding.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
