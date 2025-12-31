@@ -4,11 +4,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ConstructAI</title>
+    <title>ConstructAI Pro | Enterprise Construction Intelligence</title>
+    <meta name="description" content="ConstructAI Pro: A world-class construction estimation platform powered by Gemini AI for real-time risk auditing and strategic closing advice.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+      
+      :root {
+        color-scheme: dark;
+      }
+
       body {
         font-family: 'Inter', sans-serif;
         background-color: #020617;
@@ -16,29 +22,52 @@
         margin: 0;
         overflow-x: hidden;
       }
+
       .font-mono {
         font-family: 'JetBrains Mono', monospace;
       }
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+
+      /* Custom Scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
       }
-      ::-webkit-scrollbar-track {
-        background: #0f172a;
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
       }
-      ::-webkit-scrollbar-thumb {
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #334155;
-        border-radius: 4px;
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
-      }
+
+      /* Animations */
       .animate-fade-in {
-        animation: fadeIn 0.3s ease-out forwards;
+        animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
+      
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Recharts Tooltip Customization */
+      .recharts-default-tooltip {
+        background-color: #0f172a !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      /* Typing Animation for Gemini */
+      .fa-fade {
+        animation: fa-fade 1s infinite linear;
+      }
+      @keyframes fa-fade {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 1; }
       }
     </style>
   <script type="importmap">
@@ -53,7 +82,8 @@
 }
 </script>
 </head>
-  <body>
+  <body class="selection:bg-indigo-500/30">
     <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
   </body>
 </html>

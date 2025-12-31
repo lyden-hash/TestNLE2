@@ -4,6 +4,9 @@ import { Estimate, AIInsight, SuggestedItem, LineItem, SiteReport, ChatMessage, 
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+/**
+ * Analyzes a construction estimate for risks and pricing accuracy.
+ */
 export async function analyzeEstimate(estimate: Estimate): Promise<AIInsight> {
   const prompt = `
     As an expert construction estimator and project risk manager, analyze the following estimate and provide a detailed audit.
@@ -54,6 +57,9 @@ export async function analyzeEstimate(estimate: Estimate): Promise<AIInsight> {
   }
 }
 
+/**
+ * Suggests additional materials or labor based on project scope.
+ */
 export async function getMaterialSuggestions(estimate: Estimate): Promise<SuggestedItem[]> {
   const prompt = `
     As an expert construction estimator, suggest 5-8 missing or complementary materials/labor items for the following project.
@@ -104,6 +110,9 @@ export async function getMaterialSuggestions(estimate: Estimate): Promise<Sugges
   }
 }
 
+/**
+ * Extracts line items from document images using multimodal vision.
+ */
 export async function analyzeDocumentImage(base64Image: string, mimeType: string): Promise<Partial<LineItem>[]> {
   const prompt = `
     Extract construction line items from this document (invoice, quote, or site note). 
@@ -157,20 +166,23 @@ export async function analyzeDocumentImage(base64Image: string, mimeType: string
   }
 }
 
+/**
+ * Generates a professional site report from photos and notes.
+ */
 export async function generateSiteReport(prompt: string, base64Image?: string, mimeType?: string): Promise<Omit<SiteReport, 'id' | 'date'>> {
   const visualPart = base64Image ? [{ inlineData: { data: base64Image, mimeType: mimeType || 'image/jpeg' } }] : [];
   const textPart = { text: `
     Generate a professional construction site daily report based on the following observations and/or image:
     User Input: "${prompt}"
     
-    If an image is provided, analyze it for work in progress, safety hazards, and material usage.
+    Analyze the image for construction progress, crew presence, materials, and safety conditions.
     
     The report should include:
     1. Project Name (infer from context or provide a generic placeholder)
     2. Work Completed (array of items)
     3. Materials Used (array of items)
     4. Issues or Delays (array of items)
-    5. Weather observations (infer if possible or use generic placeholder)
+    5. Weather observations (infer or use placeholder)
     6. Safety Observations (summarize findings)
     7. Overall Summary (1-2 sentences)
   ` };
@@ -204,27 +216,27 @@ export async function generateSiteReport(prompt: string, base64Image?: string, m
   }
 }
 
+/**
+ * Provides streaming strategic sales advice for winning bids.
+ */
 export async function* streamSalesAdvice(
   history: ChatMessage[],
   context: { estimates: Estimate[]; customers: Customer[] }
 ) {
   const systemInstruction = `
     You are the "ConstructAI Closing Specialist," a world-class construction sales strategist.
-    Your mission is to help the user win more projects, improve client relationships, and negotiate better margins.
+    Your mission is to help Alex Foreman win more projects and negotiate better margins.
     
     Current Portfolio Context:
     - Active Bids: ${context.estimates.length}
     - Total Pipeline Value: $${context.estimates.reduce((a, b) => a + b.total, 0).toLocaleString()}
     - Key Clients: ${context.customers.map(c => c.name).join(', ')}
     
-    Available Data (Project Details):
-    ${context.estimates.map(e => `- Project: ${e.name}, Status: ${e.status}, Value: $${e.total}`).join('\n')}
-
-    Rules:
-    1. Be professional, aggressive yet ethical, and highly strategic.
-    2. Give specific advice based on the project names or client names if mentioned.
-    3. Offer tactical tips for construction bidding (e.g., follow-up cadences, "value engineering" as a sales hook).
-    4. Use bold text and bullet points for readability.
+    Strategic Rules:
+    1. Professional and authoritative tone.
+    2. Offer tactical "Value Engineering" advice.
+    3. Be specific about the clients mentioned.
+    4. Format with bold headers and clear bullet points.
   `;
 
   const chat = ai.chats.create({
@@ -241,11 +253,14 @@ export async function* streamSalesAdvice(
   }
 }
 
+/**
+ * Fetches real-world market pricing data using Google Search grounding.
+ */
 export async function fetchMarketIntelligence(estimate: Estimate): Promise<MarketInsight> {
-  const query = `Current construction material costs and labor rates in ${estimate.location} for: ${estimate.lineItems.map(i => i.name).slice(0, 3).join(', ')}.`;
+  const query = `Latest 2024/2025 construction material prices and labor rates in ${estimate.location} for project types like: ${estimate.name}. Focus on specific line items: ${estimate.lineItems.map(i => i.name).slice(0, 3).join(', ')}.`;
   
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-3-pro-preview',
     contents: query,
     config: {
       tools: [{ googleSearch: {} }],
@@ -258,7 +273,7 @@ export async function fetchMarketIntelligence(estimate: Estimate): Promise<Marke
     ?.map((web: any) => ({ title: web.title || 'Market Source', uri: web.uri })) || [];
 
   return {
-    text: response.text || "No detailed market intelligence found for this specific query.",
+    text: response.text || "No detailed market intelligence found. Regional pricing may vary significantly.",
     sources: sources,
   };
 }

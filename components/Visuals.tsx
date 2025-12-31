@@ -61,7 +61,7 @@ export const CustomerPipeline: React.FC<{ estimates: Estimate[]; customers: Cust
             type="category" 
             stroke="#64748b" 
             fontSize={10} 
-            width={100} 
+            width={120} 
             axisLine={false} 
             tickLine={false} 
           />

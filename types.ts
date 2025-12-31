@@ -30,8 +30,8 @@ export interface Estimate {
   exclusions: string;
   lineItems: LineItem[];
   updatedAt: number;
-  margin?: number; // Percentage
-  tax?: number;    // Percentage
+  margin?: number; 
+  tax?: number;    
 }
 
 export interface AIInsight {
